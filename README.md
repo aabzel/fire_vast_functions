@@ -1,4 +1,4 @@
-# fire_vast_functions
+# fire vast functions
 
 
 Vast functions are a serious problem in C-language projects for microcontrollers among immature so called firmware developers.
