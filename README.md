@@ -1,7 +1,7 @@
 # fire vast functions
 
 
-Vast functions are a serious problem in C-language projects for microcontrollers among immature so called firmware developers.
+Vast functions are a serious problem in C-language projects for microcontrollers among developers.
 
 Disadvantages of long functions:
 
