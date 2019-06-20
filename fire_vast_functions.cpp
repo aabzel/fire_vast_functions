@@ -139,6 +139,10 @@ void verify_functions_length (string file, int funcSizeLim) {
 
 string  clean_fun_proto_right (string codeSnippetIn)
 {
+	int len=codeSnippetIn.length();
+	if(len<7){
+		return "";
+	}
 #if DEBUG_CLEAN_FUN_PROTO_RIGHT
 	cout << "\n clean_fun_proto_right " << "\n";
 	cout << "\n codeSnippetIn {" << codeSnippetIn << "}\n";
@@ -163,6 +167,10 @@ string  clean_fun_proto_right (string codeSnippetIn)
 
 
 string clean_fun_proto_left(string codeSnippetIn) {
+	int len=codeSnippetIn.length();
+	if(len<7){
+		return "";
+	}
 #if DEBUG_CLEAN_FUN_PROTO_LEFT_IN
 	cout << "\n clean_fun_proto_left " << "\n";
 	cout << "\n codeSnippetIn [" << codeSnippetIn << "]\n";
@@ -222,7 +230,7 @@ string separate_func_prototype(string codeSnippetIn)
 	string codeSnippetOut = "";
 	int size = 0;
 	size = codeSnippetIn.size();
-	for (int i = codeSnippetIn.size() - 1; 0 <= i; i--)
+	for (int i = size - 1; 0 < i; i--)
 	{
 		if (codeSnippetIn[i] == ';') {
 			break;
@@ -305,6 +313,9 @@ void parse_c_file (string inputFileNameC)
 		codeSnippet = codeSnippet + strCfileContent[i];
 		if ('\n'==strCfileContent[i] ){
 			amountOfLineInFile++;
+			if(319==amountOfLineInFile){
+				int catchVal=1;
+			}
 			amountOfLineInFunc++;
 		}
 		if (strCfileContent[i] == '{') {
@@ -319,6 +330,7 @@ void parse_c_file (string inputFileNameC)
 #endif
 				//cout << "\n<" << codeSnippet << ">";
 				codeSnippet.pop_back();
+				// IS FUCCTION?
 				codeSnippet = separate_func_prototype(codeSnippet);
 				if (3<codeSnippet.length()) {
 					//cout << "\n{" << codeSnippet << "}";
@@ -336,9 +348,11 @@ void parse_c_file (string inputFileNameC)
 		}
 		if (strCfileContent[i] == '}') {
 			if (bracketCount == 0) {
+#if DEBUG_ERRORS
 				cout << "} balance error!" << endl;
 				cout << "error char: " << amntOfCharsIfFile << endl;
 				cout << "error line: " << amountOfLineInFile << endl;
+#endif 
 			} else if (0 < bracketCount) {
 				bracketCount--;
 				if (!bracketCount) {
