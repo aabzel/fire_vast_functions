@@ -16,17 +16,15 @@
 #include <string>
 #include <vector>
 #include <regex>
-
 #include <iterator>
 
-struct functionNode_t {
-	string funcName;
-	string funcSignature;
-	int amountOfLine;
-};
 
 vector<functionNode_t>  FuncNodeList;
-//functionsPrototypesListInC;
+ 
+bool operator < (const functionNode_t& node1, const functionNode_t& node2)
+{
+	return node2.amountOfLine < node1.amountOfLine;
+}
 
 
 string extract_file_name (string inputFileNameH) {
@@ -67,9 +65,13 @@ string remove_preproc ( string codeSnippetOut) {
 
 
 int func_name_extractor (string inStr, string* outStr)
-{
-    int sizeOfinStr=0;
-	int writeFlag =0;
+{//inStr = "((pf) ? (sfree((pf)->saddr), sfree((pf)->daddr), \	     sfree((pf)->sserv), sfree((pf)->dserv)) : (void)0 ), sfree(pf) )"
+	if (inStr.find("?") != string::npos) {
+		*outStr="";
+	    return 1;
+	}    
+	int sizeOfinStr = 0;
+	int writeFlag = 0;
 	int nameWasFlag = 0;
 	string temStr="";
 	sizeOfinStr = inStr.length();
@@ -109,7 +111,9 @@ void print_list_of_functions_proto (void) {
 
 void verify_functions_length (string file, int funcSizeLim) {
 	int amountOfViolations = 0;
-	int spotViolation=0;
+	int spotViolation = 0;
+	std::sort(FuncNodeList.begin(), FuncNodeList.end()); 
+
 	for (int i = 0; i < FuncNodeList.size(); i++) {
 		if( funcSizeLim< FuncNodeList[i].amountOfLine){
 			spotViolation=1;
@@ -121,8 +125,8 @@ void verify_functions_length (string file, int funcSizeLim) {
 	for (int i = 0; i < FuncNodeList.size(); i++) {
 		if( funcSizeLim< FuncNodeList[i].amountOfLine){
 			amountOfViolations++;
-			spotViolation=1;
-			cout <<"\n    "<< FuncNodeList[i].funcName <<": " <<FuncNodeList[i].amountOfLine << " lines";
+			spotViolation = 1;
+			cout <<"\n    "<< FuncNodeList[i].funcName <<": \t" <<FuncNodeList[i].amountOfLine << " lines";
             cout <<" exceeds "<<funcSizeLim <<" lines. Split it!" ;
 		}
 	}
@@ -246,7 +250,7 @@ string separate_func_prototype(string codeSnippetIn)
 		}
 		codeSnippetOut = codeSnippetIn[i] + codeSnippetOut;
 	}
-	if (is_proto(codeSnippetOut)) {
+	if (is_proto (codeSnippetOut)) {
 		return "";
 	}
 	codeSnippetOut = clean_fun_proto_left(codeSnippetOut);
@@ -337,8 +341,14 @@ void parse_c_file (string inputFileNameC)
 				    functionNode_t nodeFun;
 					nodeFun.amountOfLine = 999999;
 					nodeFun.funcSignature=codeSnippet;
-					func_name_extractor (nodeFun.funcSignature, &nodeFun.funcName);
-					FuncNodeList.push_back(nodeFun);
+					int ret = func_name_extractor (nodeFun.funcSignature, &nodeFun.funcName);
+					if (!ret) {
+					    if( !is_proto(nodeFun.funcSignature)) {
+                            FuncNodeList.push_back(nodeFun);
+					    }
+					}
+
+
 #if DEBUG_FILE_PARSER
 					cout <<"\nfuncrions: " << nodeFun.funcName << endl;
 #endif
