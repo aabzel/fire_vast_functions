@@ -6,10 +6,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <string>
-
-
-
 using namespace std;
+
+struct functionNode_t {
+	string funcName;
+	string funcSignature;
+	int amountOfLine;
+};
 
 string extract_file_name(string inputFileNameH);
 int is_proto(string codeSnippetIn);
@@ -25,7 +28,5 @@ int func_name_extractor (string inStr, string* outStr);
 string load_file_to_string (string inputFileName);
 string remove_preproc ( string codeSnippetOut);
 void findAndReplaceAll(string & data, string toSearch, string replaceStr);
-
-
 
 #endif /* CHECK_FUNC_SIGNATURE_H */
