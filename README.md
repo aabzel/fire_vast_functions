@@ -9,10 +9,10 @@ Disadvantages of long functions:
 
 -) Long functions typically contain repetitive code that violates the procedural paradigm of program development.
 
-My C++ console program finds all functions whose length exceeds the predetermined constant.
+My C++ console program finds all functions whose length exceeds the predetermined constant and prints it in sorting view from big to short functions.
 
 My C++ console program bot finds the names of long functions, prints its total length and check that length with parameter of utility.
 
-That checker bot utility can be run before the human CodeReview (like a Jenkins bot in Gerrit), and thus save time on the CodeReview.
 
+That checker bot utility can be run before the human Code Review (like a Jenkins bot in Gerrit), and thus save precious time on the human made Code Review.
  
